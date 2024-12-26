@@ -1,20 +1,12 @@
 import React from "react";
-import Header from "./Comman_Page/Header";
-import Footer from "./Comman_Page/Footer";
-import Signup from "./Signup";
+import Signup from "./Auth/Signup";
 import { useLocation } from "react-router-dom";
-import Login from "./Login";
+import Login from "./Auth/Login";
 
 function Home() {
   const paramsValue = useLocation();
   const path = paramsValue.pathname;
-  return (
-    <div>
-      <Header />
-      {path === "/" ? <Signup /> : <Login />}
-      <Footer />
-    </div>
-  );
+  return <div>{path === "/" ? <Signup /> : <Login />}</div>;
 }
 
 export default Home;

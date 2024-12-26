@@ -1,14 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../Components/Home";
-import Login from "../Components/Login";
-import Signup from "../Components/Signup";
+import Login from "../Components/Auth/Login";
+import UserDashboard from "../Components/user/UserDashboard";
 
 function Routers() {
   return (
     <Routes>
-      <Route path="/" element={<Signup />} />
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/userdashboard" element={<UserDashboard />} />
     </Routes>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "react-lottie-player";
-import animationData from "../../public/animation.json";
+import animationData from "../../../public/animation.json";
 
 const LottieAnimation = () => {
   return (

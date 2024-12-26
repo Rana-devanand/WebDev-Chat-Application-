@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const ParmsValue = useLocation();
   const path = ParmsValue.pathname;
+  const token = "abcdefghijklmnopqr";
+
   return (
     <>
       <div className="relative flex items-center bg-gradient-to-r from-white to-blue-800 h-16 shadow-2xl">
@@ -17,34 +19,38 @@ function Header() {
         <div className="flex items-center justify-end flex-grow pr-8">
           {/* User Avatar and Name */}
           <div className="flex items-center space-x-2 text-white">
-            {path === "/" ? (
-              <Link
-                className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
-                to="/login"
-              >
-                Login
-              </Link>
+            {token && token.length > 0 ? (
+              <>
+                <img
+                  src="https://via.placeholder.com/40"
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-full"
+                />
+                <div>
+                  <p className="font-semibold">John Matthews</p>
+                  <p className="text-sm flex items-center">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                    Online
+                  </p>
+                </div>
+              </>
             ) : (
-              <Link
-                className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
-                to="/"
-              >
-                Signup
-              </Link>
-            )}
+              <>
+                <Link
+                  className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
+                  to="/login"
+                >
+                  Login
+                </Link>
 
-            {/* <img
-              src="https://via.placeholder.com/40"
-              alt="User Avatar"
-              className="w-10 h-10 rounded-full"
-            />
-            <div>
-              <p className="font-semibold">John Matthews</p>
-              <p className="text-sm flex items-center">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
-                Online
-              </p>
-            </div> */}
+                <Link
+                  className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
+                  to="/"
+                >
+                  Signup
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
