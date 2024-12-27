@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const ParmsValue = useLocation();
   const path = ParmsValue.pathname;
-  const token = "abcdefghijklmnopqr";
+  const token = "";
 
   return (
     <>
