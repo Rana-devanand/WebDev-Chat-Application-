@@ -3,8 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 function Header() {
   const ParmsValue = useLocation();
   const path = ParmsValue.pathname;
-  const token = "";
-
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  const roomId = localStorage.getItem("roomId");
+  
   return (
     <>
       <div className="relative flex items-center bg-gradient-to-r from-white to-blue-800 h-16 shadow-2xl">
@@ -27,28 +29,33 @@ function Header() {
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <p className="font-semibold">John Matthews</p>
+                  <p className="font-semibold">{username}</p>
+                  {/* <p className="text-sm">{roomId}</p> */}
                   <p className="text-sm flex items-center">
                     <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
-                    Online
+                    {roomId}
                   </p>
                 </div>
               </>
             ) : (
               <>
-                <Link
-                  className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
-                  to="/login"
-                >
-                  Login
-                </Link>
-
+              {path === "/login" ? (
                 <Link
                   className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
                   to="/"
                 >
-                  Signup
+                  signup
                 </Link>
+                ) : (
+                  <Link
+                    className="px-4 py-2 bg-cyan-700 rounded-md font-semibold"
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                )}
+
+                
               </>
             )}
           </div>

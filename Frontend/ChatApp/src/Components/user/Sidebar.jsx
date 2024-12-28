@@ -3,14 +3,15 @@ import { IoChatbox } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { LuLogOut } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  //   const [isExpanded, setIsExpanded] = useState(true);
-
-  //   const toggleSidebar = () => {
-  //     setIsExpanded(!isExpanded);
-  //   };
-  //    ${ isExpanded ? "translate-x-0" : "-translate-x-48"
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+ 
   return (
     <>
       <div className="absolute h-[555px] w-24 bg-blue-500 shadow-[4px_0px_8px_rgba(0,0,0,0.2)]">
@@ -39,7 +40,8 @@ function Sidebar() {
             </span>
           </button>
 
-          <button className="flex items-center p-3 rounded-md hover:bg-blue-600">
+          <button className="flex items-center p-3 rounded-md hover:bg-red-400"
+          onClick={handleLogout}>
             <span className="ml-2 text-white text-2xl">
               <LuLogOut />
             </span>
