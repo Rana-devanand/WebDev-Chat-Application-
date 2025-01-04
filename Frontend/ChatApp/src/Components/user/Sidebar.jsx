@@ -9,6 +9,9 @@ function Sidebar() {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("roomId");
+    localStorage.removeItem("userId");
     navigate("/login");
   }
  

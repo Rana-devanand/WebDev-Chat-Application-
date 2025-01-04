@@ -27,6 +27,9 @@ function Login() {
         navigate("/userdashboard");
       }
     } catch (error) {
+      if(error.code === "ERR_NETWORK"){
+        toast.error("Bad Request");
+      }
       console.log(error);
     }
   };
