@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import InputEmoji from "react-input-emoji";
 
 function Chat() {
   const [chatUserName, setChatUserName] = useState(
@@ -18,10 +19,11 @@ function Chat() {
   const [storeConnectionId, setStoreConnectionId] = useState("");
   const [activeUser, setActiveUser] = useState("");
   const [connect_user_room_id, setConnectUserRoomId] = useState("");
-  const [welcomeMessage, setWelcomeMessage] = useState("Welcome to Chat App");
+  const [welcomeMessage, setWelcomeMessage] = useState(true);
   const [message, setMessage] = useState("");
   const [listMessages, setListMessages] = useState([]);
 
+  // Get all users list
   const getUsers = async () => {
     try {
       const response = await axios.get(
@@ -37,7 +39,7 @@ function Chat() {
   const handleActiveUser = async (userId) => {
     setActiveUser(userId);
     set_to_RoomId(userId);
-
+    setWelcomeMessage(false);
     const selectedUser = usersList.find((user) => user._id === userId);
     setChatUserName(usersList.find((user) => user._id === userId).name);
     if (selectedUser) {
@@ -51,6 +53,9 @@ function Chat() {
   };
 
   useEffect(() => {
+    if (storeConnectionId) {
+      setWelcomeMessage(false);
+    }
     getUsers();
   }, []);
 
@@ -68,25 +73,32 @@ function Chat() {
   // check connetion is Already exist or not
   const checkConnection = async () => {
     const from_room_id = localStorage.getItem("roomId");
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getallconnectionid/${connect_user_room_id}/${from_room_id}`);
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/getallconnectionid/${connect_user_room_id}/${from_room_id}`
+    );
     console.log("checkConnection response", response.data);
-    if(response.data.data !== null){
+    if (response.data.data !== null) {
       return response.data.data.connection_id;
-    }else if(response.data.data === null){
+    } else if (response.data.data === null) {
       const connection_id = generateConnectionId();
       return connection_id;
     }
-  }
+  };
 
   // Check connection id for chat
   const checkConnectionId = async (roomId) => {
-
     const from_room_id = localStorage.getItem("roomId");
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getallconnectionid/${from_room_id}/${roomId}`);
-    if(response.data.data === null){
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/getallconnectionid/${from_room_id}/${roomId}`
+    );
+    if (response.data.data === null) {
       toast.error("No connection channel found");
       setStoreConnectionId("");
-    }else{
+    } else {
       setStoreConnectionId(response.data.data.connection_id);
     }
   };
@@ -158,6 +170,7 @@ function Chat() {
         }
       );
       getMessagesByConnectionId();
+      setMessage("");
       formRef.current.reset();
       socket.emit("message_send", {
         roomId: storeConnectionId,
@@ -176,6 +189,7 @@ function Chat() {
       <ToastContainer />
       <div className="ml-24 flex ">
         <div className="Users-list w-1/5 h-[550px] shadow-[4px_0px_8px_rgba(0,0,0,0.2)] bg-[#f1f1f1] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+          <h3 className="text-blue-600 font-semibold text-xl p-2">Chats</h3>
           {usersList.map((data, index) => (
             <button
               key={index}
@@ -200,14 +214,25 @@ function Chat() {
             </button>
           ))}
         </div>
-        <div className="messages w-full ">
+        <div className="messages w-full relative ">
+          <div className="absolute inset-0 z-0">
+            <img
+              src="https://www.shutterstock.com/image-vector/social-media-sketch-vector-seamless-600nw-1660950727.jpg"
+              alt="background"
+              className="w-full h-full object-cover opacity-10"
+            />
+          </div>
           {storeConnectionId ? (
             <>
-              <div className="header w-[90%] mt-5 h-12 m-auto flex items-center justify-between  border-b-4">
-                <div className="user p-2 font-semibold text-blue-600">
+              <div className="header w-[100%] p-3 h-16  flex items-center justify-between bg-[#3B82F6] relative z-10  border-b-4">
+                <img
+                  className="w-10 h-10"
+                  src="https://static.vecteezy.com/system/resources/thumbnails/008/846/297/small_2x/cute-boy-avatar-png.png"
+                />
+                <div className="user p-2 font-semibold text-xl text-zinc-100 w-full m-auto">
                   {chatUserName}
                 </div>
-                <div className="msg font-extrabold text-lg flex gap-4 mr-5">
+                <div className="msg font-extrabold text-lg flex gap-4 mr-10 text-white">
                   <button>
                     <MdVideoCall style={{ fontSize: 25 }} />
                   </button>
@@ -218,54 +243,77 @@ function Chat() {
               </div>
 
               <div className="message-list w-[80%] m-auto h-[380px] p-3  border-b-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
-                <div className="messages">
-                  <div className="from text-blue-600 font-semibold justify-start text-left">
-                    {listMessages.map((message, index) => {
-                      const isCurrentUser = message.username === localStorage.getItem("username");
-                      return (
-                        <div key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}>
-                          <div className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                            isCurrentUser 
-                              ? 'bg-blue-600 text-white ml-auto' 
-                              : 'bg-gray-200 text-gray-800'
-                          }`}>
-                            <div className="break-words">
-                              {message.message}
-                            </div>
-                            <div className="text-xs mt-1 text-[#454545ec]">
-                              {isCurrentUser ? 
+                <div className="messages relative">
+                  <div className="relative z-10">
+                    <div className="from text-blue-600 font-semibold justify-start text-left">
+                      {listMessages.map((message, index) => {
+                        const isCurrentUser =
+                          message.username === localStorage.getItem("username");
+                        return (
+                          <div
+                            key={index}
+                            className={`flex ${
+                              isCurrentUser ? "justify-end" : "justify-start"
+                            } mb-2`}
+                          >
+                            <div
+                              className={`max-w-[70%] rounded-lg px-4 py-2 ${
+                                isCurrentUser
+                                  ? "bg-blue-600 text-white ml-auto"
+                                  : "bg-gray-200 text-gray-800"
+                              }`}
+                            >
+                              <div className="break-words text-sm">
+                                {message.message}
+                              </div>
+                              <div className="text-xs mt-1 text-[#454545ec]">
+                                {isCurrentUser ? (
                                   <p className="text-xs mt-1 text-[#ffffffba]">
-                                  {new Date(message.createdAt).toLocaleString()}
-                                </p>
-                                  :
-                                  <p className="text-xs mt-1 text-[#454545ec]">
-                                    {new Date(message.createdAt).toLocaleString()}
+                                    {new Date(
+                                      message.createdAt
+                                    ).toLocaleString()}
                                   </p>
-                              }
+                                ) : (
+                                  <p className="text-xs mt-1 text-[#454545ec]">
+                                    {new Date(
+                                      message.createdAt
+                                    ).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="to text-blue-600 font-semibold justify-end text-right">
-                    {/* Remove duplicate message mapping since we're handling both sent/received above */}
+                        );
+                      })}
+                    </div>
+                    <div className="to text-blue-600 font-semibold justify-end text-right">
+                      {/* Remove duplicate message mapping since we're handling both sent/received above */}
+                    </div>
                   </div>
                 </div>
               </div>
               {/* User message input */}
 
-              <form action="" onSubmit={handleSendMessage} ref={formRef}>
-                <div className="w-[80%] m-auto flex items-center p-1">
-                  <input
-                    type="text"
+              <form
+                action=""
+                onSubmit={handleSendMessage}
+                ref={formRef}
+                className="relative z-10"
+              >
+                <div className="w-[80%] m-auto flex items-center p-2">
+                  <InputEmoji
+                    value={message}
                     placeholder="Type your message here..."
-                    className="flex-grow px-4 py-4 border-none focus:outline-none  text-lg"
-                    onChange={(e) => setMessage(e.target.value)}
+                    className="flex-grow px-3 py-5 border-none focus:outline-none text-lg !important"
+                    onChange={(e) => setMessage(e)}
+                    onEnter={(e) => {
+                      handleSendMessage(e);
+                    }}
                   />
                   <button
                     className="ml-3 mr-3 px-4 py-2  text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
                     title="Send"
+                    type="submit"
                   >
                     <IoSend style={{ fontSize: 25 }} />
                   </button>
@@ -274,7 +322,11 @@ function Chat() {
             </>
           ) : (
             <div className="start-chat w-[80%] flex flex-col justify-center items-center m-auto h-[380px] border-b-4">
-              {!storeConnectionId ? (
+              {welcomeMessage ? (
+                <p className="text-blue-600 font-semibold text-2xl">
+                  Welcome to Chat App
+                </p>
+              ) : (
                 <>
                   <p className="text-blue-600 font-semibold text-2xl">
                     No connection channel found
@@ -286,10 +338,6 @@ function Chat() {
                     Create Connection
                   </button>
                 </>
-              ) : (
-                <p className="text-blue-600 font-semibold text-2xl">
-                  Welcome to Chat App
-                </p>
               )}
             </div>
           )}

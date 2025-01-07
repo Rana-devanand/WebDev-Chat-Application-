@@ -3,7 +3,7 @@ import LottieAnimation from "./LottieAnimation";
 import { useNavigate } from "react-router-dom";
 import Header from "../Comman_Page/Header";
 import Footer from "../Comman_Page/Footer";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 
@@ -27,6 +27,10 @@ function Login() {
         navigate("/userdashboard");
       }
     } catch (error) {
+      console.log(error.response.data.message == "Failed to sign in");
+      if(error.response.data.message == "Failed to sign in"){
+        toast.error("User does not exist");
+      }
       if(error.code === "ERR_NETWORK"){
         toast.error("Bad Request");
       }

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { IoChatbox } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { LuLogOut } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { MdGroups2 } from "react-icons/md";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function Sidebar() {
 
           <button className="flex items-center p-3 rounded-md hover:bg-blue-600">
             <span className="ml-2 text-white text-2xl">
-              <IoChatbox />
+              <MdGroups2 />
             </span>
           </button>
         </div>
