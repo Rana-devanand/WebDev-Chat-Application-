@@ -35,10 +35,13 @@ const signIn = async (req , res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      data : {} ,
-      message : "Failed to sign in" ,
-      success : false ,
-      err : error
+      data: {},
+      message: error.message || "Failed to sign in",
+      success: false,
+      err: {
+        code: error.code,
+        message: error.message
+      }
     })
   }
 }
