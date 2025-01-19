@@ -332,7 +332,7 @@ function Chat() {
                     No connection channel found
                   </p>
                   <button
-                    className="px-4 py-2 rounded-md  bg-green-700 text-white font-semibold text-lg mt-5"
+                    className="relative px-4 py-2 rounded-md  bg-green-700 text-white font-semibold text-lg mt-5"
                     onClick={handleCreateConnectionId}
                   >
                     Create Connection
