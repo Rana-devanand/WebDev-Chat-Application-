@@ -7,10 +7,10 @@ import Socket from "../Components/user/Socket";
 function Routers() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/userdashboard" element={<UserDashboard />} />
-      <Route path="/chat" element={<Socket />} />
+      <Route path="/chatApplication/" element={<Home />} />
+      <Route path="/chatApplication/login" element={<Login />} />
+      <Route path="/chatApplication/userdashboard" element={<UserDashboard />} />
+      <Route path="/chatApplication/chat" element={<Socket />} />
     </Routes>
   );
 }
