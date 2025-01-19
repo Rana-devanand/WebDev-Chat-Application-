@@ -14,7 +14,7 @@ const ApiRoutes = require("./Routes/index");
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://rana-devanand.github.io",
     methods: ["GET", "POST"],
   },
 });
